@@ -1,0 +1,20 @@
+<div class="min-h-screen flex items-center justify-center bg-background">
+  <div class="text-center px-4">
+    <!-- 404 Icon -->
+    <div class="mb-8">
+      <svg class="w-32 h-32 text-muted mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0120 12a8 8 0 10-2.343 5.657l.707.707a1 1 0 001.414-1.414l-.707-.707z"></path>
+      </svg>
+    </div>
+
+    <!-- Content -->
+    <h1 class="text-6xl font-bold text-primary mb-4">{{ 'notFound.title' | translate }}</h1>
+    <h2 class="text-2xl font-semibold text-foreground mb-4">{{ 'notFound.subtitle' | translate }}</h2>
+    <p class="text-muted text-lg mb-8 max-w-md mx-auto">{{ 'notFound.message' | translate }}</p>
+
+    <!-- Action Button -->
+    <button routerLink="/" class="btn btn-primary">
+      {{ 'notFound.backToHome' | translate }}
+    </button>
+  </div>
+</div>

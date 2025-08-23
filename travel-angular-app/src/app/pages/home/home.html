@@ -1,0 +1,170 @@
+<!-- Hero Section -->
+<section class="py-20 px-4">
+  <div class="container mx-auto text-center">
+    <h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-hero bg-clip-text text-transparent">
+      {{ 'home.title' | translate }}
+    </h1>
+    <p class="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+      {{ 'home.subtitle' | translate }}
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <ui-button
+        size="lg"
+        class="bg-gradient-hero hover:opacity-90 text-lg px-8"
+        (click)="router.navigate(['/explore'])"
+      >
+        {{ 'home.cta' | translate }}
+        <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+      </ui-button>
+      <ui-button
+        size="lg"
+        variant="outline"
+        class="text-lg px-8"
+        (click)="router.navigate(['/community'])"
+      >
+        {{ 'nav.community' | translate }}
+      </ui-button>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Actions -->
+<section class="py-16 px-4 bg-muted/30">
+  <div class="container mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-12">{{ 'home.quickActions' | translate }}</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      @for (action of quickActions; track action.title) {
+        <ui-card
+          class="hover:shadow-lg transition-all cursor-pointer group"
+          (click)="action.action()"
+        >
+          <ui-card-content class="p-8 text-center">
+            <div class="inline-flex p-4 rounded-full mb-4 group-hover:scale-110 transition-transform" [ngClass]="action.color" [innerHTML]="action.icon">
+            </div>
+            <h3 class="text-xl font-semibold mb-2">{{ action.title | translate }}</h3>
+            <p class="text-muted-foreground">{{ action.description }}</p>
+          </ui-card-content>
+        </ui-card>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Featured Destinations -->
+<section class="py-16 px-4">
+  <div class="container mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold mb-4">{{ 'home.featured' | translate }}</h2>
+      <p class="text-muted-foreground text-lg">Discover the world's most amazing places</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      @for (destination of featuredDestinations; track destination.name) {
+        <ui-card class="overflow-hidden hover:shadow-xl transition-all cursor-pointer group">
+          <div class="aspect-video overflow-hidden">
+            <img
+              [src]="destination.image"
+              [alt]="destination.name"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+          <ui-card-content class="p-6">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-xl font-semibold">{{ destination.name }}</h3>
+              <ui-badge variant="secondary" class="flex items-center gap-1">
+                <svg class="h-3 w-3 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                {{ destination.rating }}
+              </ui-badge>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              @for (highlight of destination.highlights; track highlight) {
+                <ui-badge variant="outline" class="text-xs">
+                  {{ highlight }}
+                </ui-badge>
+              }
+            </div>
+          </ui-card-content>
+        </ui-card>
+      }
+    </div>
+
+    <div class="text-center mt-8">
+      <ui-button
+        variant="outline"
+        size="lg"
+        (click)="router.navigate(['/explore'])"
+      >
+        View All Destinations
+        <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+      </ui-button>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-16 px-4 bg-muted/30">
+  <div class="container mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div>
+        <div class="flex justify-center mb-3">
+          <svg class="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <p class="text-3xl font-bold text-primary mb-1">180+</p>
+        <p class="text-muted-foreground">{{ 'home.stats.destinations' | translate }}</p>
+      </div>
+      <div>
+        <div class="flex justify-center mb-3">
+          <svg class="h-8 w-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+        <p class="text-3xl font-bold text-secondary mb-1">50K+</p>
+        <p class="text-muted-foreground">{{ 'home.stats.travelers' | translate }}</p>
+      </div>
+      <div>
+        <div class="flex justify-center mb-3">
+          <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <p class="text-3xl font-bold text-accent mb-1">120K+</p>
+        <p class="text-muted-foreground">{{ 'home.stats.reviews' | translate }}</p>
+      </div>
+      <div>
+        <div class="flex justify-center mb-3">
+          <svg class="h-8 w-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+          </svg>
+        </div>
+        <p class="text-3xl font-bold text-red-500 mb-1">1M+</p>
+        <p class="text-muted-foreground">Memories Created</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 px-4">
+  <div class="container mx-auto text-center">
+    <h2 class="text-4xl font-bold mb-4">Ready to Start Your Adventure?</h2>
+    <p class="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+      Join thousands of travelers who have discovered their perfect destinations through TravelHub.
+    </p>
+    <ui-button
+      size="lg"
+      class="bg-gradient-hero hover:opacity-90 text-lg px-12"
+      (click)="router.navigate(['/register'])"
+    >
+      Get Started Today
+    </ui-button>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+.map-container {
+  min-height: 300px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+// Leaflet popup styling
+:global(.leaflet-popup-content) {
+  margin: 8px 12px;
+  line-height: 1.4;
+}
+
+:global(.map-popup h3) {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+:global(.map-popup p) {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}

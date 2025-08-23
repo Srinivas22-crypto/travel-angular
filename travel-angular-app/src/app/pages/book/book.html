@@ -1,0 +1,309 @@
+<!-- Header Section -->
+<section class="bg-gradient-hero text-white py-16">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+      {{ 'book.title' | translate }}
+    </h1>
+    <p class="text-xl opacity-90 mb-8">
+      {{ 'book.subtitle' | translate }}
+    </p>
+  </div>
+</section>
+
+<!-- Booking Tabs -->
+<section class="py-8 bg-muted">
+  <div class="container mx-auto px-4">
+    <!-- Tab Navigation -->
+    <div class="flex justify-center mb-8">
+      <div class="bg-card rounded-lg p-1 shadow-md">
+        <button
+          (click)="setActiveTab('flights')"
+          [class]="activeTab() === 'flights' ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'"
+          class="px-6 py-3 rounded-md transition-colors font-medium"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+          </svg>
+          {{ 'book.flights' | translate }}
+        </button>
+        <button
+          (click)="setActiveTab('hotels')"
+          [class]="activeTab() === 'hotels' ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'"
+          class="px-6 py-3 rounded-md transition-colors font-medium"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          {{ 'book.hotels' | translate }}
+        </button>
+        <button
+          (click)="setActiveTab('cars')"
+          [class]="activeTab() === 'cars' ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'"
+          class="px-6 py-3 rounded-md transition-colors font-medium"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM21 17a2 2 0 11-4 0 2 2 0 014 0zM7 9l4-4 4 4M7 9v6a2 2 0 002 2h6a2 2 0 002-2V9M7 9H5a2 2 0 00-2 2v6a2 2 0 002 2h2"></path>
+          </svg>
+          Cars
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="max-w-4xl mx-auto">
+      <!-- Flights Tab -->
+      @if (activeTab() === 'flights') {
+        <div class="card">
+          <h3 class="text-2xl font-semibold mb-6">Search Flights</h3>
+          <form [formGroup]="flightSearchForm" (ngSubmit)="searchFlights()">
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <!-- From -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">From</label>
+                <input
+                  type="text"
+                  formControlName="from"
+                  class="input"
+                  placeholder="Departure city"
+                />
+              </div>
+
+              <!-- To -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">To</label>
+                <input
+                  type="text"
+                  formControlName="to"
+                  class="input"
+                  placeholder="Destination city"
+                />
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-4">
+              <!-- Departure Date -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Departure</label>
+                <input
+                  type="date"
+                  formControlName="departureDate"
+                  class="input"
+                />
+              </div>
+
+              <!-- Return Date -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Return</label>
+                <input
+                  type="date"
+                  formControlName="returnDate"
+                  class="input"
+                />
+              </div>
+
+              <!-- Passengers -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Passengers</label>
+                <select formControlName="passengers" class="input">
+                  <option value="1">1 Passenger</option>
+                  <option value="2">2 Passengers</option>
+                  <option value="3">3 Passengers</option>
+                  <option value="4">4 Passengers</option>
+                  <option value="5">5+ Passengers</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+              <!-- Class -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Class</label>
+                <select formControlName="class" class="input">
+                  <option value="economy">Economy</option>
+                  <option value="business">Business</option>
+                  <option value="first">First Class</option>
+                </select>
+              </div>
+
+              <!-- Trip Type -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Trip Type</label>
+                <select formControlName="tripType" class="input">
+                  <option value="round-trip">Round Trip</option>
+                  <option value="one-way">One Way</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-full"
+              [disabled]="flightSearchForm.invalid || bookingService.isLoading()"
+            >
+              @if (bookingService.isLoading()) {
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Searching...
+              } @else {
+                Search Flights
+              }
+            </button>
+          </form>
+        </div>
+      }
+
+      <!-- Hotels Tab -->
+      @if (activeTab() === 'hotels') {
+        <div class="card">
+          <h3 class="text-2xl font-semibold mb-6">Search Hotels</h3>
+          <form [formGroup]="hotelSearchForm" (ngSubmit)="searchHotels()">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-foreground mb-2">Destination</label>
+              <input
+                type="text"
+                formControlName="destination"
+                class="input"
+                placeholder="City or hotel name"
+              />
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <!-- Check In -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Check In</label>
+                <input
+                  type="date"
+                  formControlName="checkIn"
+                  class="input"
+                />
+              </div>
+
+              <!-- Check Out -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Check Out</label>
+                <input
+                  type="date"
+                  formControlName="checkOut"
+                  class="input"
+                />
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+              <!-- Guests -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Guests</label>
+                <select formControlName="guests" class="input">
+                  <option value="1">1 Guest</option>
+                  <option value="2">2 Guests</option>
+                  <option value="3">3 Guests</option>
+                  <option value="4">4 Guests</option>
+                  <option value="5">5+ Guests</option>
+                </select>
+              </div>
+
+              <!-- Rooms -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Rooms</label>
+                <select formControlName="rooms" class="input">
+                  <option value="1">1 Room</option>
+                  <option value="2">2 Rooms</option>
+                  <option value="3">3 Rooms</option>
+                  <option value="4">4+ Rooms</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-full"
+              [disabled]="hotelSearchForm.invalid || bookingService.isLoading()"
+            >
+              @if (bookingService.isLoading()) {
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Searching...
+              } @else {
+                Search Hotels
+              }
+            </button>
+          </form>
+        </div>
+      }
+
+      <!-- Cars Tab -->
+      @if (activeTab() === 'cars') {
+        <div class="card">
+          <h3 class="text-2xl font-semibold mb-6">Search Cars</h3>
+          <form [formGroup]="carSearchForm" (ngSubmit)="searchCars()">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-foreground mb-2">Location</label>
+              <input
+                type="text"
+                formControlName="location"
+                class="input"
+                placeholder="Pick-up location"
+              />
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <!-- Pick-up Date -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Pick-up Date</label>
+                <input
+                  type="date"
+                  formControlName="pickupDate"
+                  class="input"
+                />
+              </div>
+
+              <!-- Return Date -->
+              <div>
+                <label class="block text-sm font-medium text-foreground mb-2">Return Date</label>
+                <input
+                  type="date"
+                  formControlName="returnDate"
+                  class="input"
+                />
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-foreground mb-2">Car Category</label>
+              <select formControlName="category" class="input">
+                <option value="">All Categories</option>
+                <option value="economy">Economy</option>
+                <option value="compact">Compact</option>
+                <option value="midsize">Midsize</option>
+                <option value="fullsize">Full Size</option>
+                <option value="luxury">Luxury</option>
+                <option value="suv">SUV</option>
+                <option value="convertible">Convertible</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-full"
+              [disabled]="carSearchForm.invalid || bookingService.isLoading()"
+            >
+              @if (bookingService.isLoading()) {
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Searching...
+              } @else {
+                Search Cars
+              }
+            </button>
+          </form>
+        </div>
+      }
+    </div>
+  </div>
+</section>
