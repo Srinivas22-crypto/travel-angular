@@ -5,11 +5,30 @@ import { ApiService } from './api.service';
 import { Router } from '@angular/router';
 
 export interface User {
-  id: string;
+  _id: string;
+  id?: string;
   email: string;
   name: string;
+  bio?: string;
+  profileImage?: string;
   avatar?: string;
-  preferences?: any;
+  role?: string;
+  preferences?: {
+    language?: string;
+    currency?: string;
+    bio?: string;
+    location?: string;
+    website?: string;
+    newsletter?: boolean;
+    darkMode?: boolean;
+    notifications?: {
+      email?: boolean;
+      push?: boolean;
+      marketing?: boolean;
+    };
+  };
+  isVerified?: boolean;
+  createdAt?: string;
 }
 
 export interface LoginRequest {
@@ -24,8 +43,9 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  user: User;
+  success: boolean;
   token: string;
+  data: User;
 }
 
 @Injectable({
@@ -61,19 +81,19 @@ export class AuthService {
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.apiService.post<AuthResponse>('/auth/login', credentials).pipe(
-      map(response => response.data),
-      tap(authData => {
-        this.setAuthData(authData);
-      })
+      tap(response => {
+        this.setAuthData(response.data);
+      }),
+      map(response => response.data)
     );
   }
 
   register(userData: RegisterRequest): Observable<AuthResponse> {
     return this.apiService.post<AuthResponse>('/auth/register', userData).pipe(
-      map(response => response.data),
-      tap(authData => {
-        this.setAuthData(authData);
-      })
+      tap(response => {
+        this.setAuthData(response.data);
+      }),
+      map(response => response.data)
     );
   }
 
@@ -87,8 +107,8 @@ export class AuthService {
 
   private setAuthData(authData: AuthResponse): void {
     localStorage.setItem('authToken', authData.token);
-    localStorage.setItem('currentUser', JSON.stringify(authData.user));
-    this.currentUserSubject.next(authData.user);
+    localStorage.setItem('currentUser', JSON.stringify(authData.data));
+    this.currentUserSubject.next(authData.data);
     this.isAuthenticatedSubject.next(true);
   }
 

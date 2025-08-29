@@ -2,42 +2,122 @@
   <div class="header-container">
     <!-- Logo and Brand -->
     <div class="brand">
-      <a routerLink="/" class="brand-link">
-        <span class="brand-icon">✈️</span>
-        <span class="brand-text">TravelApp</span>
+      <a routerLink="/home" class="brand-link">
+        <div class="brand-icon">✈️</div>
+        <div class="brand-info">
+          <span class="brand-text">TravelHub</span>
+          <span class="brand-tagline">Your Journey Starts Here</span>
+        </div>
       </a>
     </div>
 
-    <!-- Search Bar -->
-    <div class="search-container">
-      <form (ngSubmit)="onSearch()" class="search-form">
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+      <!-- Explore Dropdown -->
+      <div class="nav-dropdown" (mouseenter)="showDropdown('explore')" (mouseleave)="hideDropdown('explore')">
+        <button class="nav-button">
+          <span class="nav-icon">📍</span>
+          <span>Explore</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        <div class="dropdown-menu" [class.show]="activeDropdown === 'explore'">
+          <a routerLink="/destinations" class="dropdown-item">
+            <span class="item-icon">🌍</span>
+            <div class="item-content">
+              <span class="item-title">Destinations</span>
+              <span class="item-subtitle">Discover amazing places</span>
+            </div>
+          </a>
+          <a routerLink="/experiences" class="dropdown-item">
+            <span class="item-icon">🎯</span>
+            <div class="item-content">
+              <span class="item-title">Experiences</span>
+              <span class="item-subtitle">Unique activities</span>
+            </div>
+          </a>
+          <a routerLink="/guides" class="dropdown-item">
+            <span class="item-icon">📖</span>
+            <div class="item-content">
+              <span class="item-title">Travel Guides</span>
+              <span class="item-subtitle">Expert recommendations</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Book Dropdown -->
+      <div class="nav-dropdown" (mouseenter)="showDropdown('book')" (mouseleave)="hideDropdown('book')">
+        <button class="nav-button">
+          <span class="nav-icon">📅</span>
+          <span>Book</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        <div class="dropdown-menu" [class.show]="activeDropdown === 'book'">
+          <a routerLink="/bookings/flights" class="dropdown-item">
+            <span class="item-icon">✈️</span>
+            <div class="item-content">
+              <span class="item-title">Flights</span>
+              <span class="item-subtitle">Find the best deals</span>
+            </div>
+          </a>
+          <a routerLink="/bookings/hotels" class="dropdown-item">
+            <span class="item-icon">🏨</span>
+            <div class="item-content">
+              <span class="item-title">Hotels</span>
+              <span class="item-subtitle">Book your stay</span>
+            </div>
+          </a>
+          <a routerLink="/bookings/cars" class="dropdown-item">
+            <span class="item-icon">🚗</span>
+            <div class="item-content">
+              <span class="item-title">Car Rental</span>
+              <span class="item-subtitle">Rent a vehicle</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Community Link -->
+      <a routerLink="/community" class="nav-link">
+        <span class="nav-icon">👥</span>
+        <span>Community</span>
+      </a>
+    </nav>
+
+    <!-- Right Side Controls -->
+    <div class="header-controls">
+      <!-- Search -->
+      <div class="search-container" [class.expanded]="isSearchExpanded">
+        <button class="search-toggle" (click)="toggleSearch()">
+          <span class="search-icon">🔍</span>
+        </button>
         <input
+          #searchInput
           type="text"
           [(ngModel)]="searchQuery"
-          placeholder="Search destinations, hotels, flights..."
+          (keyup.enter)="onSearch()"
+          (blur)="onSearchBlur()"
+          placeholder="Search"
           class="search-input"
           name="search"
         />
-        <button type="submit" class="search-button">
-          <span class="search-icon">🔍</span>
+        <button *ngIf="isSearchExpanded && searchQuery" class="search-clear" (click)="clearSearch()">
+          <span>✕</span>
         </button>
-      </form>
-    </div>
+      </div>
 
-    <!-- Navigation and Controls -->
-    <div class="header-controls">
-      <!-- Language Selector -->
+      <!-- Notifications -->
+      <button class="notification-btn" *ngIf="isAuthenticated$ | async">
+        <span class="notification-icon">🔔</span>
+        <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
+      </button>
+
+      <!-- Language & Region -->
       <div class="language-selector">
-        <select
-          [(ngModel)]="selectedLanguage"
-          (change)="onLanguageChange()"
-          class="language-select"
-          name="language"
-        >
-          <option *ngFor="let lang of languages" [value]="lang.code">
-            {{ lang.name }}
-          </option>
-        </select>
+        <button class="language-btn">
+          <span class="flag-icon">🇺🇸</span>
+          <span>English</span>
+        </button>
       </div>
 
       <!-- Theme Toggle -->
@@ -46,38 +126,38 @@
         <span *ngIf="isDarkMode$ | async">☀️</span>
       </button>
 
-      <!-- Navigation Links (Desktop) -->
-      <nav class="desktop-nav" *ngIf="isAuthenticated$ | async">
-        <a routerLink="/explore" routerLinkActive="active" class="nav-link">Explore</a>
-        <a routerLink="/community" routerLinkActive="active" class="nav-link">Community</a>
-        <a routerLink="/bookings" routerLinkActive="active" class="nav-link">Bookings</a>
-        <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
-          <span class="notification-icon">🔔</span>
-        </a>
-      </nav>
-
       <!-- User Menu -->
       <div class="user-menu" *ngIf="isAuthenticated$ | async; else authButtons">
-        <button (click)="toggleMenu()" class="user-button">
+        <button (click)="toggleUserMenu()" class="user-button">
           <img
             [src]="(currentUser$ | async)?.avatar || '/assets/default-avatar.png'"
             [alt]="(currentUser$ | async)?.name"
             class="user-avatar"
           />
-          <span class="user-name">{{ (currentUser$ | async)?.name }}</span>
-          <span class="dropdown-arrow">▼</span>
         </button>
 
-        <div class="dropdown-menu" [class.open]="isMenuOpen">
-          <a routerLink="/profile" class="dropdown-item" (click)="toggleMenu()">
+        <div class="user-dropdown" [class.show]="isUserMenuOpen">
+          <div class="user-info">
+            <img
+              [src]="(currentUser$ | async)?.avatar || '/assets/default-avatar.png'"
+              [alt]="(currentUser$ | async)?.name"
+              class="user-avatar-large"
+            />
+            <div class="user-details">
+              <span class="user-name">{{ (currentUser$ | async)?.name }}</span>
+              <span class="user-email">{{ (currentUser$ | async)?.email }}</span>
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <a routerLink="/profile" class="dropdown-item" (click)="toggleUserMenu()">
             <span class="dropdown-icon">👤</span>
             Profile Settings
           </a>
-          <a routerLink="/bookings" class="dropdown-item" (click)="toggleMenu()">
+          <a routerLink="/bookings" class="dropdown-item" (click)="toggleUserMenu()">
             <span class="dropdown-icon">📋</span>
             My Bookings
           </a>
-          <a routerLink="/favorites" class="dropdown-item" (click)="toggleMenu()">
+          <a routerLink="/favorites" class="dropdown-item" (click)="toggleUserMenu()">
             <span class="dropdown-icon">❤️</span>
             Favorites
           </a>
@@ -98,29 +178,47 @@
       </ng-template>
 
       <!-- Mobile Menu Toggle -->
-      <button (click)="toggleMenu()" class="mobile-menu-toggle">
-        <span class="hamburger"></span>
+      <button (click)="toggleMobileMenu()" class="mobile-menu-toggle">
+        <span class="hamburger" [class.active]="isMobileMenuOpen"></span>
       </button>
     </div>
   </div>
 
   <!-- Mobile Navigation -->
-  <nav class="mobile-nav" [class.open]="isMenuOpen" *ngIf="isAuthenticated$ | async">
-    <a routerLink="/explore" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMenu()">
-      <span class="nav-icon">🌍</span>
-      Explore
-    </a>
-    <a routerLink="/community" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMenu()">
-      <span class="nav-icon">👥</span>
-      Community
-    </a>
-    <a routerLink="/bookings" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMenu()">
-      <span class="nav-icon">📋</span>
-      Bookings
-    </a>
-    <a routerLink="/notifications" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMenu()">
-      <span class="nav-icon">🔔</span>
-      Notifications
-    </a>
+  <nav class="mobile-nav" [class.open]="isMobileMenuOpen">
+    <div class="mobile-nav-content">
+      <a routerLink="/home" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <span class="nav-icon">🏠</span>
+        Home
+      </a>
+      <a routerLink="/explore" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <span class="nav-icon">📍</span>
+        Explore
+      </a>
+      <a routerLink="/bookings/flights" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <span class="nav-icon">✈️</span>
+        Flights
+      </a>
+      <a routerLink="/bookings/hotels" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <span class="nav-icon">🏨</span>
+        Hotels
+      </a>
+      <a routerLink="/community" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <span class="nav-icon">👥</span>
+        Community
+      </a>
+      <div class="mobile-nav-divider"></div>
+      <div class="mobile-nav-controls">
+        <button (click)="toggleTheme()" class="mobile-control-btn">
+          <span *ngIf="!(isDarkMode$ | async)">🌙</span>
+          <span *ngIf="isDarkMode$ | async">☀️</span>
+          <span>Theme</span>
+        </button>
+        <button class="mobile-control-btn">
+          <span>🇺🇸</span>
+          <span>English</span>
+        </button>
+      </div>
+    </div>
   </nav>
 </header>

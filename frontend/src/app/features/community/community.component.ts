@@ -8,6 +8,7 @@ interface Post {
   author: {
     id: string;
     name: string;
+    username: string;
     avatar: string;
     verified: boolean;
   };
@@ -23,17 +24,25 @@ interface Post {
   tags: string[];
 }
 
-interface Comment {
+interface Group {
   id: string;
-  author: {
-    id: string;
-    name: string;
-    avatar: string;
-  };
-  content: string;
-  timestamp: Date;
-  likes: number;
-  isLiked: boolean;
+  name: string;
+  category: string;
+  description: string;
+  image: string;
+  members: number;
+  isJoined: boolean;
+}
+
+interface TrendingTopic {
+  hashtag: string;
+  posts: number;
+}
+
+interface CommunityStats {
+  activeUsers: string;
+  sharedExperiences: string;
+  countriesVisited: string;
 }
 
 @Component({
@@ -44,121 +53,144 @@ interface Comment {
   styleUrls: ['./community.component.css']
 })
 export class CommunityComponent implements OnInit {
+  activeTab: 'feed' | 'groups' | 'create' = 'feed';
   posts: Post[] = [];
-  filteredPosts: Post[] = [];
-  selectedFilter = 'all';
-  newPostContent = '';
+  groups: Group[] = [];
+  trendingTopics: TrendingTopic[] = [];
+  communityStats: CommunityStats = {
+    activeUsers: '50,000+',
+    sharedExperiences: '120,000+',
+    countriesVisited: '180+'
+  };
+  
+  // Share story modal
+  showShareModal = false;
+  newStoryContent = '';
+  newStoryLocation = '';
+  newStoryTags = '';
+  selectedImages: File[] = [];
+  
+  // Theme
+  isDarkMode = false;
+  
   isLoading = false;
-  showNewPostModal = false;
-
-  filters = [
-    { value: 'all', label: 'All Posts', icon: '📋' },
-    { value: 'photos', label: 'Photos', icon: '📸' },
-    { value: 'tips', label: 'Travel Tips', icon: '💡' },
-    { value: 'questions', label: 'Questions', icon: '❓' },
-    { value: 'reviews', label: 'Reviews', icon: '⭐' }
-  ];
 
   ngOnInit(): void {
-    this.loadPosts();
+    this.loadData();
+    this.checkTheme();
   }
 
-  loadPosts(): void {
+  checkTheme(): void {
+    this.isDarkMode = document.documentElement.classList.contains('dark') || 
+                     localStorage.getItem('theme') === 'dark';
+  }
+
+  toggleTheme(): void {
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  loadData(): void {
     this.isLoading = true;
     
-    // Mock data - replace with actual API call
     setTimeout(() => {
-      this.posts = [
-        {
-          id: '1',
-          author: {
-            id: 'user1',
-            name: 'Sarah Johnson',
-            avatar: '/assets/avatars/sarah.jpg',
-            verified: true
-          },
-          content: 'Just returned from an amazing week in Bali! The rice terraces in Ubud are absolutely breathtaking. Here are some tips for anyone planning to visit: 1) Visit early morning for the best light, 2) Hire a local guide, 3) Bring comfortable walking shoes. The culture and people are incredible! 🌾✨',
-          images: ['/assets/posts/bali-1.jpg', '/assets/posts/bali-2.jpg'],
-          location: 'Ubud, Bali',
-          timestamp: new Date('2024-01-15T10:30:00'),
-          likes: 142,
-          comments: 23,
-          shares: 8,
-          isLiked: false,
-          isSaved: false,
-          tags: ['bali', 'ubud', 'rice-terraces', 'tips']
-        },
-        {
-          id: '2',
-          author: {
-            id: 'user2',
-            name: 'Mike Chen',
-            avatar: '/assets/avatars/mike.jpg',
-            verified: false
-          },
-          content: 'Question for fellow travelers: What\'s the best way to get from Tokyo to Kyoto? I\'ve heard about the JR Pass but wondering if it\'s worth it for just this route. Any recommendations? 🚅',
-          images: [],
-          location: 'Tokyo, Japan',
-          timestamp: new Date('2024-01-14T15:45:00'),
-          likes: 28,
-          comments: 15,
-          shares: 3,
-          isLiked: true,
-          isSaved: false,
-          tags: ['japan', 'tokyo', 'kyoto', 'transportation', 'question']
-        },
-        {
-          id: '3',
-          author: {
-            id: 'user3',
-            name: 'Emma Rodriguez',
-            avatar: '/assets/avatars/emma.jpg',
-            verified: true
-          },
-          content: 'Santorini sunset from Oia - no filter needed! This place truly lives up to the hype. Pro tip: book your dinner reservation early, the restaurants with sunset views fill up fast! 🌅',
-          images: ['/assets/posts/santorini-sunset.jpg'],
-          location: 'Oia, Santorini',
-          timestamp: new Date('2024-01-13T20:15:00'),
-          likes: 89,
-          comments: 12,
-          shares: 5,
-          isLiked: false,
-          isSaved: true,
-          tags: ['santorini', 'sunset', 'greece', 'photography']
-        }
-      ];
-      
-      this.filteredPosts = [...this.posts];
+      this.loadPosts();
+      this.loadGroups();
+      this.loadTrendingTopics();
       this.isLoading = false;
     }, 1000);
   }
 
-  onFilterChange(filter: string): void {
-    this.selectedFilter = filter;
-    this.applyFilter();
+  loadPosts(): void {
+    this.posts = [
+      {
+        id: '1',
+        author: {
+          id: 'user1',
+          name: 'Sarah Johnson',
+          username: '@sarah',
+          avatar: '/assets/avatars/sarah.jpg',
+          verified: true
+        },
+        content: 'Just had the most amazing sunset in Santorini! The blue domes and white buildings create such a magical atmosphere. Already planning my next visit! 🌅',
+        images: ['/assets/posts/santorini-1.jpg'],
+        location: 'Santorini, Greece',
+        timestamp: new Date('2024-01-15T10:30:00'),
+        likes: 127,
+        comments: 23,
+        shares: 8,
+        isLiked: false,
+        isSaved: false,
+        tags: ['santorini', 'sunset', 'greece', 'travel']
+      },
+      {
+        id: '2',
+        author: {
+          id: 'user2',
+          name: 'Mike Chen',
+          username: '@mikec',
+          avatar: '/assets/avatars/mike.jpg',
+          verified: false
+        },
+        content: 'Tokyo\'s street food scene is absolutely incredible! Spent the whole day exploring Shibuya and trying different foods. The ramen here is on another level 🍜',
+        images: [],
+        location: 'Tokyo, Japan',
+        timestamp: new Date('2024-01-14T15:45:00'),
+        likes: 89,
+        comments: 15,
+        shares: 3,
+        isLiked: true,
+        isSaved: false,
+        tags: ['tokyo', 'japan', 'food', 'ramen']
+      }
+    ];
   }
 
-  private applyFilter(): void {
-    if (this.selectedFilter === 'all') {
-      this.filteredPosts = [...this.posts];
-    } else {
-      this.filteredPosts = this.posts.filter(post => {
-        switch (this.selectedFilter) {
-          case 'photos':
-            return post.images.length > 0;
-          case 'tips':
-            return post.tags.includes('tips') || post.content.toLowerCase().includes('tip');
-          case 'questions':
-            return post.tags.includes('question') || post.content.includes('?');
-          case 'reviews':
-            return post.tags.includes('review') || post.content.toLowerCase().includes('review');
-          default:
-            return true;
-        }
-      });
-    }
+  loadGroups(): void {
+    this.groups = [
+      {
+        id: '1',
+        name: 'Solo Travelers Unite',
+        category: 'Solo Travel',
+        description: 'Connect with fellow solo travelers and share experiences',
+        image: '/assets/groups/solo-travel.jpg',
+        members: 15420,
+        isJoined: false
+      },
+      {
+        id: '2',
+        name: 'Budget Backpackers',
+        category: 'Budget Travel',
+        description: 'Tips and tricks for traveling on a budget',
+        image: '/assets/groups/budget-travel.jpg',
+        members: 8930,
+        isJoined: false
+      }
+    ];
   }
 
+  loadTrendingTopics(): void {
+    this.trendingTopics = [
+      { hashtag: '#SustainableTravel', posts: 2340 },
+      { hashtag: '#HiddenGems', posts: 1890 },
+      { hashtag: '#FoodieTravel', posts: 3210 },
+      { hashtag: '#AdventureTravel', posts: 2760 },
+      { hashtag: '#TravelTips', posts: 4120 }
+    ];
+  }
+
+  // Tab navigation
+  setActiveTab(tab: 'feed' | 'groups' | 'create'): void {
+    this.activeTab = tab;
+  }
+
+  // Post interactions
   toggleLike(post: Post): void {
     post.isLiked = !post.isLiked;
     post.likes += post.isLiked ? 1 : -1;
@@ -169,30 +201,49 @@ export class CommunityComponent implements OnInit {
   }
 
   sharePost(post: Post): void {
-    // Implement share functionality
     console.log('Sharing post:', post.id);
     post.shares += 1;
   }
 
   openComments(post: Post): void {
-    // Navigate to post detail with comments
     console.log('Opening comments for post:', post.id);
   }
 
-  openNewPostModal(): void {
-    this.showNewPostModal = true;
+  // Group interactions
+  toggleJoinGroup(group: Group): void {
+    group.isJoined = !group.isJoined;
+    group.members += group.isJoined ? 1 : -1;
   }
 
-  closeNewPostModal(): void {
-    this.showNewPostModal = false;
-    this.newPostContent = '';
+  // Share story modal
+  openShareModal(): void {
+    this.showShareModal = true;
   }
 
-  submitNewPost(): void {
-    if (this.newPostContent.trim()) {
-      // Implement post creation
-      console.log('Creating new post:', this.newPostContent);
-      this.closeNewPostModal();
+  closeShareModal(): void {
+    this.showShareModal = false;
+    this.newStoryContent = '';
+    this.newStoryLocation = '';
+    this.newStoryTags = '';
+    this.selectedImages = [];
+  }
+
+  onImageSelect(event: any): void {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      this.selectedImages = Array.from(files);
+    }
+  }
+
+  submitStory(): void {
+    if (this.newStoryContent.trim()) {
+      console.log('Creating new story:', {
+        content: this.newStoryContent,
+        location: this.newStoryLocation,
+        tags: this.newStoryTags,
+        images: this.selectedImages
+      });
+      this.closeShareModal();
     }
   }
 

@@ -1,0 +1,228 @@
+<div class="booking-container">
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="hero-section">
+      <h1 class="hero-title">Book Your Journey</h1>
+      <p class="hero-subtitle">Find and book flights, hotels, and experiences</p>
+      
+      <!-- Booking Tabs -->
+      <div class="booking-tabs">
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'flights'"
+          (click)="setActiveTab('flights')">
+          <span class="tab-icon">✈️</span>
+          <span>Flights</span>
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'hotels'"
+          (click)="setActiveTab('hotels')">
+          <span class="tab-icon">🏨</span>
+          <span>Hotels</span>
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'cars'"
+          (click)="setActiveTab('cars')">
+          <span class="tab-icon">🚗</span>
+          <span>Cars</span>
+        </button>
+      </div>
+
+      <!-- Flight Search Form -->
+      <div class="search-form" *ngIf="activeTab === 'flights'">
+        <div class="form-header">
+          <span class="form-icon">✈️</span>
+          <h2 class="form-title">Search Flights</h2>
+          <p class="form-subtitle">Find the best flight deals for your destination</p>
+        </div>
+        
+        <div class="form-fields">
+          <div class="field-row">
+            <div class="input-group">
+              <label>From</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📍</span>
+                <input type="text" placeholder="Departure city" [(ngModel)]="flightSearch.from">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>To</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📍</span>
+                <input type="text" placeholder="Destination city" [(ngModel)]="flightSearch.to">
+              </div>
+            </div>
+          </div>
+          
+          <div class="field-row">
+            <div class="input-group">
+              <label>Departure Date</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📅</span>
+                <input type="date" [(ngModel)]="flightSearch.departureDate">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Return Date</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📅</span>
+                <input type="date" [(ngModel)]="flightSearch.returnDate">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Passengers</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👥</span>
+                <select [(ngModel)]="flightSearch.passengers">
+                  <option value="1">1 Adult</option>
+                  <option value="2">2 Adults</option>
+                  <option value="3">3 Adults</option>
+                  <option value="4">4 Adults</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="search-button" (click)="searchFlights()">
+          <span class="button-icon">✈️</span>
+          <span>Search Flights</span>
+        </button>
+      </div>
+
+      <!-- Hotel Search Form -->
+      <div class="search-form" *ngIf="activeTab === 'hotels'">
+        <div class="form-header">
+          <span class="form-icon">🏨</span>
+          <h2 class="form-title">Search Hotels</h2>
+          <p class="form-subtitle">Find comfortable accommodations for your stay</p>
+        </div>
+        
+        <div class="form-fields">
+          <div class="field-row">
+            <div class="input-group full-width">
+              <label>Destination</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📍</span>
+                <input type="text" placeholder="Where are you going?" [(ngModel)]="hotelSearch.destination">
+              </div>
+            </div>
+          </div>
+          
+          <div class="field-row">
+            <div class="input-group">
+              <label>Check-in Date</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📅</span>
+                <input type="date" [(ngModel)]="hotelSearch.checkIn">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Check-out Date</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📅</span>
+                <input type="date" [(ngModel)]="hotelSearch.checkOut">
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Guests & Rooms</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👥</span>
+                <select [(ngModel)]="hotelSearch.guests">
+                  <option value="2-1">2 guests, 1 room</option>
+                  <option value="4-2">4 guests, 2 rooms</option>
+                  <option value="6-3">6 guests, 3 rooms</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="search-button" (click)="searchHotels()">
+          <span class="button-icon">🏨</span>
+          <span>Search Hotels</span>
+        </button>
+      </div>
+
+      <!-- Car Rental Form -->
+      <div class="search-form" *ngIf="activeTab === 'cars'">
+        <div class="form-header">
+          <span class="form-icon">🚗</span>
+          <h2 class="form-title">Rent a Car</h2>
+          <p class="form-subtitle">Find the perfect vehicle for your journey</p>
+        </div>
+        
+        <div class="form-fields">
+          <div class="field-row">
+            <div class="input-group full-width">
+              <label>Pick-up Location</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📍</span>
+                <input type="text" placeholder="Pick-up location" [(ngModel)]="carSearch.location">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="search-button" (click)="searchCars()">
+          <span class="button-icon">🚗</span>
+          <span>Search Cars</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Flight Deals Section -->
+    <section class="deals-section">
+      <h2 class="section-title">Today's Flight Deals</h2>
+      <div class="deals-grid">
+        <div class="deal-card" *ngFor="let deal of flightDeals">
+          <div class="deal-route">
+            <span class="route-from">{{ deal.from }}</span>
+            <span class="route-arrow">→</span>
+            <span class="route-to">{{ deal.to }}</span>
+          </div>
+          <div class="deal-airline">{{ deal.airline }}</div>
+          <div class="deal-duration">{{ deal.duration }}</div>
+          <div class="deal-price">${{ deal.price }}</div>
+          <div class="deal-rating">
+            <span class="stars">{{ getStars(deal.rating) }}</span>
+            <span class="rating-value">{{ deal.rating }}</span>
+          </div>
+          <button class="deal-button">Book Now</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Hotels Section -->
+    <section class="hotels-section">
+      <h2 class="section-title">Featured Hotels</h2>
+      <div class="hotels-grid">
+        <div class="hotel-card" *ngFor="let hotel of featuredHotels">
+          <div class="hotel-image">
+            <img [src]="hotel.image" [alt]="hotel.name">
+          </div>
+          <div class="hotel-content">
+            <h3 class="hotel-name">{{ hotel.name }}</h3>
+            <p class="hotel-location">{{ hotel.location }}</p>
+            <div class="hotel-amenities">
+              <span class="amenity" *ngFor="let amenity of hotel.amenities">{{ amenity }}</span>
+            </div>
+            <div class="hotel-footer">
+              <div class="hotel-rating">
+                <span class="stars">{{ getStars(hotel.rating) }}</span>
+                <span class="rating-value">{{ hotel.rating }}</span>
+              </div>
+              <div class="hotel-actions">
+                <span class="hotel-type">{{ hotel.type }}</span>
+                <span class="hotel-feature">{{ hotel.feature }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

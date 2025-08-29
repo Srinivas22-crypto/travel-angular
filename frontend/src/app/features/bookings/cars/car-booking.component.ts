@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-car-booking',
@@ -16,10 +17,10 @@ import { FormsModule } from '@angular/forms';
       <div class="booking-form">
         <div class="form-section">
           <h2>Search Cars</h2>
-          <p>Car rental functionality will be implemented here.</p>
+          <p>Redirecting to main booking page...</p>
           <div class="placeholder-content">
             <div class="placeholder-icon">🚗</div>
-            <p>This is a placeholder for the car rental interface.</p>
+            <p>Loading car rental interface...</p>
           </div>
         </div>
       </div>
@@ -36,4 +37,14 @@ import { FormsModule } from '@angular/forms';
     .dark-theme .page-subtitle { color: #9ca3af; }
   `]
 })
-export class CarBookingComponent {}
+export class CarBookingComponent implements OnInit {
+  
+  constructor(private router: Router) {}
+  
+  ngOnInit(): void {
+    // Redirect to main booking page with cars tab active
+    this.router.navigate(['/bookings/main'], { 
+      queryParams: { tab: 'cars' } 
+    });
+  }
+}

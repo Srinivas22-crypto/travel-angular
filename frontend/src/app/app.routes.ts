@@ -4,7 +4,13 @@ import { GuestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
   // Default redirect
-  { path: '', redirectTo: '/explore', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  
+  // Home page (public)
+  {
+    path: 'home',
+    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
+  },
   
   // Auth routes (only accessible when not logged in)
   {
@@ -23,20 +29,19 @@ export const routes: Routes = [
     ]
   },
   
-  // Protected routes (require authentication)
+  // Public routes (no authentication required)
   {
     path: 'explore',
-    canActivate: [AuthGuard],
     loadComponent: () => import('./features/explore/explore.component').then(m => m.ExploreComponent)
   },
   {
     path: 'community',
-    canActivate: [AuthGuard],
     loadComponent: () => import('./features/community/community.component').then(m => m.CommunityComponent)
   },
+  
+  // Booking routes (public access for browsing, auth required for actual booking)
   {
     path: 'bookings',
-    canActivate: [AuthGuard],
     loadChildren: () => import('./features/bookings/bookings.routes').then(m => m.bookingsRoutes)
   },
   {

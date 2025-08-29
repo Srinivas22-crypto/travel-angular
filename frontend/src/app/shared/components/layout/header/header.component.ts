@@ -18,7 +18,11 @@ export class HeaderComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   isDarkMode$: Observable<boolean>;
   searchQuery = '';
-  isMenuOpen = false;
+  isUserMenuOpen = false;
+  isMobileMenuOpen = false;
+  isSearchExpanded = false;
+  activeDropdown: string | null = null;
+  notificationCount = 3;
   selectedLanguage = 'en';
 
   languages = [
@@ -52,8 +56,49 @@ export class HeaderComponent implements OnInit {
     this.themeService.toggleTheme();
   }
 
-  toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
+  toggleUserMenu(): void {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+
+  toggleSearch(): void {
+    this.isSearchExpanded = !this.isSearchExpanded;
+    if (this.isSearchExpanded) {
+      setTimeout(() => {
+        const searchInput = document.querySelector('.search-input') as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 100);
+    }
+  }
+
+  onSearchBlur(): void {
+    if (!this.searchQuery.trim()) {
+      this.isSearchExpanded = false;
+    }
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.isSearchExpanded = false;
+  }
+
+  showDropdown(dropdown: string): void {
+    this.activeDropdown = dropdown;
+  }
+
+  hideDropdown(dropdown: string): void {
+    if (this.activeDropdown === dropdown) {
+      this.activeDropdown = null;
+    }
   }
 
   onLanguageChange(): void {
@@ -64,6 +109,6 @@ export class HeaderComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    this.isMenuOpen = false;
+    this.isUserMenuOpen = false;
   }
 }

@@ -1,0 +1,91 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Discover Your Next <span class="highlight">Adventure</span>
+      </h1>
+      <p class="hero-description">
+        Explore amazing destinations, book incredible experiences, and connect with
+        fellow travelers around the world.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" routerLink="/explore">
+          Start Your Journey
+          <span class="arrow">→</span>
+        </button>
+        <button class="btn-secondary" routerLink="/community">
+          Community
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Actions Section -->
+  <section class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="quick-actions-grid">
+      <div class="action-card" *ngFor="let action of quickActions" [routerLink]="action.link">
+        <div class="action-icon">{{ action.icon }}</div>
+        <h3 class="action-title">{{ action.title }}</h3>
+        <p class="action-description">{{ action.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Destinations Section -->
+  <section class="destinations-section">
+    <div class="section-header">
+      <h2 class="section-title">Featured Destinations</h2>
+      <p class="section-subtitle">Discover the world's most amazing places</p>
+    </div>
+    <div class="destinations-grid">
+      <div class="destination-card" *ngFor="let destination of destinations" [routerLink]="['/destination', destination.id]">
+        <div class="destination-image">
+          <img [src]="destination.image" [alt]="destination.name" />
+          <div class="destination-rating">
+            <span class="star">★</span>
+            <span class="rating-value">{{ destination.rating }}</span>
+          </div>
+        </div>
+        <div class="destination-info">
+          <h3 class="destination-name">{{ destination.name }}</h3>
+          <div class="destination-tags">
+            <span class="tag" *ngFor="let tag of destination.tags">{{ tag }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="view-all">
+      <button class="btn-link" routerLink="/explore">
+        View All Destinations
+        <span class="arrow">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item" *ngFor="let stat of stats">
+        <div class="stat-icon">{{ stat.icon }}</div>
+        <div class="stat-value">{{ stat.value }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Start Your Adventure?</h2>
+      <p class="cta-description">
+        Join thousands of travelers who have discovered their perfect destinations
+        through TravelHub.
+      </p>
+      <button class="btn-gradient" routerLink="/auth/register">
+        Get Started Today
+      </button>
+    </div>
+  </section>
+</div>

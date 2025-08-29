@@ -27,7 +27,7 @@ export class ExploreComponent implements OnInit {
   filteredDestinations: Destination[] = [];
   searchQuery = '';
   selectedCategory = 'all';
-  sortBy = 'popular';
+  sortBy = 'rating';
   isLoading = false;
 
   categories = [
@@ -36,15 +36,26 @@ export class ExploreComponent implements OnInit {
     { value: 'mountain', label: 'Mountain' },
     { value: 'city', label: 'City' },
     { value: 'adventure', label: 'Adventure' },
-    { value: 'cultural', label: 'Cultural' },
-    { value: 'nature', label: 'Nature' }
+    { value: 'cultural', label: 'Culture' },
+    { value: 'nature', label: 'Nature' },
+    { value: 'food', label: 'Food' }
+  ];
+
+  categoryCards = [
+    { value: 'all', label: 'All', icon: '🌍' },
+    { value: 'adventure', label: 'Adventure', icon: '🏔️' },
+    { value: 'beach', label: 'Beach', icon: '🏖️' },
+    { value: 'cultural', label: 'Culture', icon: '🏛️' },
+    { value: 'food', label: 'Food', icon: '🍽️' },
+    { value: 'nature', label: 'Nature', icon: '🌿' },
+    { value: 'city', label: 'City', icon: '🏙️' }
   ];
 
   sortOptions = [
+    { value: 'rating', label: 'Highest Rated' },
     { value: 'popular', label: 'Most Popular' },
     { value: 'price-low', label: 'Price: Low to High' },
     { value: 'price-high', label: 'Price: High to Low' },
-    { value: 'rating', label: 'Highest Rated' },
     { value: 'name', label: 'Name A-Z' }
   ];
 
@@ -123,6 +134,28 @@ export class ExploreComponent implements OnInit {
           price: 999,
           category: 'cultural',
           featured: false
+        },
+        {
+          id: '7',
+          name: 'Paris, France',
+          country: 'France',
+          image: '/assets/destinations/paris.jpg',
+          description: 'City of lights with world-class cuisine and culture',
+          rating: 4.7,
+          price: 1399,
+          category: 'food',
+          featured: false
+        },
+        {
+          id: '8',
+          name: 'Yellowstone, USA',
+          country: 'USA',
+          image: '/assets/destinations/yellowstone.jpg',
+          description: 'America\'s first national park with geysers and wildlife',
+          rating: 4.6,
+          price: 799,
+          category: 'nature',
+          featured: false
         }
       ];
       
@@ -187,5 +220,17 @@ export class ExploreComponent implements OnInit {
 
   getEmptyStarArray(rating: number): number[] {
     return Array(5 - Math.floor(rating)).fill(0);
+  }
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+    this.applyFilters();
+  }
+
+  getCategoryCount(category: string): number {
+    if (category === 'all') {
+      return this.destinations.length;
+    }
+    return this.destinations.filter(dest => dest.category === category).length;
   }
 }
