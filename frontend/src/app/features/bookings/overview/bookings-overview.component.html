@@ -1,0 +1,133 @@
+<div class="bookings-container">
+  <!-- Header Section -->
+  <section class="bookings-header">
+    <div class="header-content">
+      <h1 class="page-title">My Bookings</h1>
+      <p class="page-subtitle">Manage your travel reservations and itineraries</p>
+      
+      <div class="quick-actions">
+        <a routerLink="/bookings/flights" class="action-card">
+          <span class="action-icon">✈️</span>
+          <span class="action-label">Book Flight</span>
+        </a>
+        <a routerLink="/bookings/hotels" class="action-card">
+          <span class="action-icon">🏨</span>
+          <span class="action-label">Book Hotel</span>
+        </a>
+        <a routerLink="/bookings/cars" class="action-card">
+          <span class="action-icon">🚗</span>
+          <span class="action-label">Rent Car</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Loading your bookings...</p>
+  </div>
+
+  <!-- Bookings Content -->
+  <div *ngIf="!isLoading" class="bookings-content">
+    <!-- Upcoming Bookings -->
+    <section class="bookings-section" *ngIf="upcomingBookings.length > 0">
+      <h2 class="section-title">Upcoming Trips</h2>
+      <div class="bookings-grid">
+        <div *ngFor="let booking of upcomingBookings" class="booking-card">
+          <div class="booking-image">
+            <img [src]="booking.image" [alt]="booking.title" />
+            <div class="booking-type">
+              <span class="type-icon">{{ getTypeIcon(booking.type) }}</span>
+            </div>
+          </div>
+          
+          <div class="booking-content">
+            <div class="booking-header">
+              <h3 class="booking-title">{{ booking.title }}</h3>
+              <div class="booking-status" [style.color]="getStatusColor(booking.status)">
+                {{ booking.status | titlecase }}
+              </div>
+            </div>
+            
+            <p class="booking-destination">📍 {{ booking.destination }}</p>
+            
+            <div class="booking-dates">
+              <div class="date-range">
+                <span class="date-label">Check-in:</span>
+                <span class="date-value">{{ formatDate(booking.dates.start) }}</span>
+              </div>
+              <div class="date-range">
+                <span class="date-label">Check-out:</span>
+                <span class="date-value">{{ formatDate(booking.dates.end) }}</span>
+              </div>
+            </div>
+            
+            <div class="booking-footer">
+              <div class="booking-price">
+                <span class="price-label">Total:</span>
+                <span class="price-value">${{ booking.price }}</span>
+              </div>
+              <div class="booking-actions">
+                <button class="action-btn secondary">View Details</button>
+                <button class="action-btn primary">Manage</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Past Bookings -->
+    <section class="bookings-section" *ngIf="pastBookings.length > 0">
+      <h2 class="section-title">Past Trips</h2>
+      <div class="bookings-grid">
+        <div *ngFor="let booking of pastBookings" class="booking-card past">
+          <div class="booking-image">
+            <img [src]="booking.image" [alt]="booking.title" />
+            <div class="booking-type">
+              <span class="type-icon">{{ getTypeIcon(booking.type) }}</span>
+            </div>
+          </div>
+          
+          <div class="booking-content">
+            <div class="booking-header">
+              <h3 class="booking-title">{{ booking.title }}</h3>
+              <div class="booking-status completed">
+                Completed
+              </div>
+            </div>
+            
+            <p class="booking-destination">📍 {{ booking.destination }}</p>
+            
+            <div class="booking-dates">
+              <span class="date-range-text">
+                {{ formatDate(booking.dates.start) }} - {{ formatDate(booking.dates.end) }}
+              </span>
+            </div>
+            
+            <div class="booking-footer">
+              <div class="booking-price">
+                <span class="price-value">${{ booking.price }}</span>
+              </div>
+              <div class="booking-actions">
+                <button class="action-btn secondary">View Receipt</button>
+                <button class="action-btn primary">Book Again</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Empty State -->
+    <div *ngIf="bookings.length === 0" class="empty-state">
+      <div class="empty-icon">🧳</div>
+      <h3 class="empty-title">No bookings yet</h3>
+      <p class="empty-message">Start planning your next adventure!</p>
+      <div class="empty-actions">
+        <a routerLink="/explore" class="cta-button">Explore Destinations</a>
+      </div>
+    </div>
+  </div>
+</div>

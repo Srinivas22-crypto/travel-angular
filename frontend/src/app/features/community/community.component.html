@@ -1,0 +1,181 @@
+<div class="community-container">
+  <!-- Header Section -->
+  <section class="community-header">
+    <div class="header-content">
+      <h1 class="page-title">Travel Community</h1>
+      <p class="page-subtitle">Share your adventures, get travel tips, and connect with fellow travelers</p>
+      
+      <button (click)="openNewPostModal()" class="new-post-button">
+        <span class="button-icon">✍️</span>
+        Share Your Story
+      </button>
+    </div>
+  </section>
+
+  <!-- Filters Section -->
+  <section class="filters-section">
+    <div class="filters-container">
+      <h3 class="filters-title">Filter Posts</h3>
+      <div class="filters-grid">
+        <button
+          *ngFor="let filter of filters"
+          (click)="onFilterChange(filter.value)"
+          class="filter-button"
+          [class.active]="selectedFilter === filter.value"
+        >
+          <span class="filter-icon">{{ filter.icon }}</span>
+          <span class="filter-label">{{ filter.label }}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Posts Section -->
+  <section class="posts-section">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Loading community posts...</p>
+    </div>
+
+    <!-- Posts Feed -->
+    <div *ngIf="!isLoading" class="posts-feed">
+      <article *ngFor="let post of filteredPosts" class="post-card">
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="author-info">
+            <img [src]="post.author.avatar" [alt]="post.author.name" class="author-avatar" />
+            <div class="author-details">
+              <div class="author-name">
+                {{ post.author.name }}
+                <span *ngIf="post.author.verified" class="verified-badge">✓</span>
+              </div>
+              <div class="post-meta">
+                <span *ngIf="post.location" class="post-location">📍 {{ post.location }}</span>
+                <span class="post-time">{{ getTimeAgo(post.timestamp) }}</span>
+              </div>
+            </div>
+          </div>
+          <button class="post-menu-button">⋯</button>
+        </header>
+
+        <!-- Post Content -->
+        <div class="post-content">
+          <p class="post-text">{{ post.content }}</p>
+          
+          <!-- Post Images -->
+          <div *ngIf="post.images.length > 0" class="post-images">
+            <div class="images-grid" [class.single-image]="post.images.length === 1">
+              <img
+                *ngFor="let image of post.images"
+                [src]="image"
+                [alt]="'Post image'"
+                class="post-image"
+              />
+            </div>
+          </div>
+
+          <!-- Post Tags -->
+          <div *ngIf="post.tags.length > 0" class="post-tags">
+            <span *ngFor="let tag of post.tags" class="post-tag">#{{ tag }}</span>
+          </div>
+        </div>
+
+        <!-- Post Actions -->
+        <footer class="post-actions">
+          <div class="action-buttons">
+            <button
+              (click)="toggleLike(post)"
+              class="action-button like-button"
+              [class.active]="post.isLiked"
+            >
+              <span class="action-icon">{{ post.isLiked ? '❤️' : '🤍' }}</span>
+              <span class="action-count">{{ post.likes }}</span>
+            </button>
+
+            <button (click)="openComments(post)" class="action-button comment-button">
+              <span class="action-icon">💬</span>
+              <span class="action-count">{{ post.comments }}</span>
+            </button>
+
+            <button (click)="sharePost(post)" class="action-button share-button">
+              <span class="action-icon">🔗</span>
+              <span class="action-count">{{ post.shares }}</span>
+            </button>
+
+            <button
+              (click)="toggleSave(post)"
+              class="action-button save-button"
+              [class.active]="post.isSaved"
+            >
+              <span class="action-icon">{{ post.isSaved ? '🔖' : '📌' }}</span>
+            </button>
+          </div>
+        </footer>
+      </article>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && filteredPosts.length === 0" class="empty-state">
+      <div class="empty-icon">📝</div>
+      <h3 class="empty-title">No posts found</h3>
+      <p class="empty-message">Try adjusting your filter or be the first to share something!</p>
+      <button (click)="onFilterChange('all')" class="reset-button">
+        Show All Posts
+      </button>
+    </div>
+  </section>
+</div>
+
+<!-- New Post Modal -->
+<div *ngIf="showNewPostModal" class="modal-overlay" (click)="closeNewPostModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2 class="modal-title">Share Your Travel Story</h2>
+      <button (click)="closeNewPostModal()" class="modal-close">✕</button>
+    </header>
+
+    <form (ngSubmit)="submitNewPost()" class="new-post-form">
+      <div class="form-group">
+        <textarea
+          [(ngModel)]="newPostContent"
+          placeholder="What's your latest travel adventure? Share tips, photos, or ask questions..."
+          class="post-textarea"
+          rows="6"
+          name="content"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <div class="post-options">
+          <button type="button" class="option-button">
+            <span class="option-icon">📸</span>
+            Add Photos
+          </button>
+          <button type="button" class="option-button">
+            <span class="option-icon">📍</span>
+            Add Location
+          </button>
+          <button type="button" class="option-button">
+            <span class="option-icon">#️⃣</span>
+            Add Tags
+          </button>
+        </div>
+
+        <div class="submit-actions">
+          <button type="button" (click)="closeNewPostModal()" class="cancel-button">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="submit-button"
+            [disabled]="!newPostContent.trim()"
+          >
+            Share Post
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,161 @@
+<div class="explore-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Explore Amazing Destinations</h1>
+      <p class="hero-subtitle">Discover your next adventure from thousands of destinations worldwide</p>
+      
+      <!-- Search Bar -->
+      <div class="search-section">
+        <form (ngSubmit)="onSearch()" class="search-form">
+          <div class="search-input-container">
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              placeholder="Search destinations, countries, or experiences..."
+              class="search-input"
+              name="search"
+            />
+            <button type="submit" class="search-button">
+              <span class="search-icon">🔍</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters Section -->
+  <section class="filters-section">
+    <div class="filters-container">
+      <div class="filter-group">
+        <label for="category" class="filter-label">Category:</label>
+        <select
+          id="category"
+          [(ngModel)]="selectedCategory"
+          (change)="onCategoryChange()"
+          class="filter-select"
+          name="category"
+        >
+          <option *ngFor="let category of categories" [value]="category.value">
+            {{ category.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="sort" class="filter-label">Sort by:</label>
+        <select
+          id="sort"
+          [(ngModel)]="sortBy"
+          (change)="onSortChange()"
+          class="filter-select"
+          name="sort"
+        >
+          <option *ngFor="let option of sortOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="results-count">
+        <span class="count-text">{{ filteredDestinations.length }} destinations found</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Destinations -->
+  <section class="featured-section" *ngIf="getFeaturedDestinations().length > 0">
+    <div class="section-header">
+      <h2 class="section-title">Featured Destinations</h2>
+      <p class="section-subtitle">Hand-picked destinations for your next adventure</p>
+    </div>
+
+    <div class="featured-grid">
+      <div
+        *ngFor="let destination of getFeaturedDestinations()"
+        class="featured-card"
+        [routerLink]="['/destination', destination.id]"
+      >
+        <div class="card-image">
+          <img [src]="destination.image" [alt]="destination.name" />
+          <div class="card-badge">Featured</div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">{{ destination.name }}</h3>
+          <p class="card-description">{{ destination.description }}</p>
+          <div class="card-meta">
+            <div class="rating">
+              <span *ngFor="let star of getStarArray(destination.rating)" class="star filled">⭐</span>
+              <span *ngFor="let star of getEmptyStarArray(destination.rating)" class="star">☆</span>
+              <span class="rating-text">{{ destination.rating }}</span>
+            </div>
+            <div class="price">
+              <span class="price-label">From</span>
+              <span class="price-value">${{ destination.price }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- All Destinations -->
+  <section class="destinations-section">
+    <div class="section-header">
+      <h2 class="section-title">All Destinations</h2>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Loading destinations...</p>
+    </div>
+
+    <!-- Destinations Grid -->
+    <div *ngIf="!isLoading" class="destinations-grid">
+      <div
+        *ngFor="let destination of filteredDestinations"
+        class="destination-card"
+        [routerLink]="['/destination', destination.id]"
+      >
+        <div class="card-image">
+          <img [src]="destination.image" [alt]="destination.name" />
+          <div class="card-overlay">
+            <button class="favorite-button" (click)="$event.stopPropagation()">
+              <span class="heart-icon">🤍</span>
+            </button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="card-header">
+            <h3 class="card-title">{{ destination.name }}</h3>
+            <span class="card-country">{{ destination.country }}</span>
+          </div>
+          <p class="card-description">{{ destination.description }}</p>
+          <div class="card-footer">
+            <div class="rating">
+              <span *ngFor="let star of getStarArray(destination.rating)" class="star filled">⭐</span>
+              <span *ngFor="let star of getEmptyStarArray(destination.rating)" class="star">☆</span>
+              <span class="rating-text">{{ destination.rating }}</span>
+            </div>
+            <div class="price">
+              <span class="price-label">From</span>
+              <span class="price-value">${{ destination.price }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && filteredDestinations.length === 0" class="empty-state">
+      <div class="empty-icon">🗺️</div>
+      <h3 class="empty-title">No destinations found</h3>
+      <p class="empty-message">Try adjusting your search criteria or browse all destinations</p>
+      <button (click)="searchQuery = ''; selectedCategory = 'all'; applyFilters()" class="reset-button">
+        Reset Filters
+      </button>
+    </div>
+  </section>
+</div>

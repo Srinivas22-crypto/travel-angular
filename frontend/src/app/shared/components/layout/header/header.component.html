@@ -1,0 +1,126 @@
+<header class="header">
+  <div class="header-container">
+    <!-- Logo and Brand -->
+    <div class="brand">
+      <a routerLink="/" class="brand-link">
+        <span class="brand-icon">✈️</span>
+        <span class="brand-text">TravelApp</span>
+      </a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <form (ngSubmit)="onSearch()" class="search-form">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Search destinations, hotels, flights..."
+          class="search-input"
+          name="search"
+        />
+        <button type="submit" class="search-button">
+          <span class="search-icon">🔍</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Navigation and Controls -->
+    <div class="header-controls">
+      <!-- Language Selector -->
+      <div class="language-selector">
+        <select
+          [(ngModel)]="selectedLanguage"
+          (change)="onLanguageChange()"
+          class="language-select"
+          name="language"
+        >
+          <option *ngFor="let lang of languages" [value]="lang.code">
+            {{ lang.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Theme Toggle -->
+      <button (click)="toggleTheme()" class="theme-toggle" title="Toggle theme">
+        <span *ngIf="!(isDarkMode$ | async)">🌙</span>
+        <span *ngIf="isDarkMode$ | async">☀️</span>
+      </button>
+
+      <!-- Navigation Links (Desktop) -->
+      <nav class="desktop-nav" *ngIf="isAuthenticated$ | async">
+        <a routerLink="/explore" routerLinkActive="active" class="nav-link">Explore</a>
+        <a routerLink="/community" routerLinkActive="active" class="nav-link">Community</a>
+        <a routerLink="/bookings" routerLinkActive="active" class="nav-link">Bookings</a>
+        <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
+          <span class="notification-icon">🔔</span>
+        </a>
+      </nav>
+
+      <!-- User Menu -->
+      <div class="user-menu" *ngIf="isAuthenticated$ | async; else authButtons">
+        <button (click)="toggleMenu()" class="user-button">
+          <img
+            [src]="(currentUser$ | async)?.avatar || '/assets/default-avatar.png'"
+            [alt]="(currentUser$ | async)?.name"
+            class="user-avatar"
+          />
+          <span class="user-name">{{ (currentUser$ | async)?.name }}</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+
+        <div class="dropdown-menu" [class.open]="isMenuOpen">
+          <a routerLink="/profile" class="dropdown-item" (click)="toggleMenu()">
+            <span class="dropdown-icon">👤</span>
+            Profile Settings
+          </a>
+          <a routerLink="/bookings" class="dropdown-item" (click)="toggleMenu()">
+            <span class="dropdown-icon">📋</span>
+            My Bookings
+          </a>
+          <a routerLink="/favorites" class="dropdown-item" (click)="toggleMenu()">
+            <span class="dropdown-icon">❤️</span>
+            Favorites
+          </a>
+          <div class="dropdown-divider"></div>
+          <button (click)="logout()" class="dropdown-item logout">
+            <span class="dropdown-icon">🚪</span>
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Auth Buttons (Not logged in) -->
+      <ng-template #authButtons>
+        <div class="auth-buttons">
+          <a routerLink="/auth/signin" class="auth-link signin">Sign In</a>
+          <a routerLink="/auth/register" class="auth-link register">Register</a>
+        </div>
+      </ng-template>
+
+      <!-- Mobile Menu Toggle -->
+      <button (click)="toggleMenu()" class="mobile-menu-toggle">
+        <span class="hamburger"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" [class.open]="isMenuOpen" *ngIf="isAuthenticated$ | async">
+    <a routerLink="/explore" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMenu()">
+      <span class="nav-icon">🌍</span>
+      Explore
+    </a>
+    <a routerLink="/community" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMenu()">
+      <span class="nav-icon">👥</span>
+      Community
+    </a>
+    <a routerLink="/bookings" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMenu()">
+      <span class="nav-icon">📋</span>
+      Bookings
+    </a>
+    <a routerLink="/notifications" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMenu()">
+      <span class="nav-icon">🔔</span>
+      Notifications
+    </a>
+  </nav>
+</header>

@@ -1,0 +1,92 @@
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Main Footer Content -->
+    <div class="footer-content">
+      <!-- Brand Section -->
+      <div class="footer-brand">
+        <div class="brand">
+          <span class="brand-icon">✈️</span>
+          <span class="brand-text">TravelApp</span>
+        </div>
+        <p class="brand-description">
+          Discover amazing destinations, connect with fellow travelers, and create unforgettable memories around the world.
+        </p>
+        <div class="social-links">
+          <a
+            *ngFor="let social of socialLinks"
+            [href]="social.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-link"
+            [title]="social.name"
+          >
+            {{ social.icon }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Links Sections -->
+      <div class="footer-links">
+        <div class="link-group">
+          <h3 class="link-group-title">Company</h3>
+          <ul class="link-list">
+            <li *ngFor="let link of footerLinks.company">
+              <a [routerLink]="link.route" class="footer-link">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="link-group">
+          <h3 class="link-group-title">Support</h3>
+          <ul class="link-list">
+            <li *ngFor="let link of footerLinks.support">
+              <a [routerLink]="link.route" class="footer-link">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="link-group">
+          <h3 class="link-group-title">Legal</h3>
+          <ul class="link-list">
+            <li *ngFor="let link of footerLinks.legal">
+              <a [routerLink]="link.route" class="footer-link">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Newsletter Signup -->
+      <div class="newsletter">
+        <h3 class="newsletter-title">Stay Updated</h3>
+        <p class="newsletter-description">
+          Get the latest travel deals and destination guides delivered to your inbox.
+        </p>
+        <form class="newsletter-form">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            class="newsletter-input"
+            required
+          />
+          <button type="submit" class="newsletter-button">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <p class="copyright">
+          © {{ currentYear }} TravelApp. All rights reserved.
+        </p>
+        <div class="footer-bottom-links">
+          <a routerLink="/privacy" class="footer-bottom-link">Privacy</a>
+          <a routerLink="/terms" class="footer-bottom-link">Terms</a>
+          <a routerLink="/cookies" class="footer-bottom-link">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

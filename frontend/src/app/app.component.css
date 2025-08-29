@@ -1,0 +1,27 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-content {
+  flex: 1;
+  padding: 0;
+}
+
+/* Light theme (default) */
+.app-container {
+  background-color: #ffffff;
+  color: #333333;
+}
+
+/* Dark theme */
+.app-container.dark-theme {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.app-container.dark-theme .main-content {
+  background-color: #1a1a1a;
+}
